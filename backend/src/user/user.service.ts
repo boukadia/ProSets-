@@ -1,26 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    return this.prisma.user.create({
+      data: createUserDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findByAuth0Id(auth0Id: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { auth0Id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+ 
+
+  async findOrCreateByAuth0(
+    auth0Id: string,
+    email: string,
+    name?: string,
+    avatar?: string,
+  ): Promise<User> {
+    let user = await this.findByAuth0Id(auth0Id);
+    
+    if (!user) {
+      user = await this.create({
+        auth0Id,
+        email,
+        name,
+        avatar,
+      });
+    }
+    
+    return user;
   }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
+  }
+
+ 
 }

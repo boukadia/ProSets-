@@ -22,13 +22,17 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @Get('auth0/:auth0Id')
+  findByAuth0Id(@Param('auth0Id') auth0Id: string) {
+    return this.userService.findByAuth0Id(auth0Id);
+  }
+
+  
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+  
 }

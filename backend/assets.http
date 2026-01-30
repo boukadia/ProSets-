@@ -1,0 +1,73 @@
+### Variables
+@baseUrl = http://localhost:3000
+@token = YOUR_AUTH0_TOKEN_HERE
+
+### 1. Create Asset (needs Auth0 token)
+POST {{baseUrl}}/assets
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "3D House Model",
+  "description": "Beautiful modern house 3D model with high quality textures",
+  "price": 29.99,
+  "category": "MODELS_3D",
+  "previewUrl": "https://example.com/preview.jpg",
+  "previewImages": [
+    "https://example.com/preview1.jpg",
+    "https://example.com/preview2.jpg"
+  ],
+  "privateFileKey": "assets/private/house-model.blend",
+  "fileSize": 5242880
+}
+
+### 2. Get All Assets (public)
+GET {{baseUrl}}/assets
+
+### 3. Get Assets with filters
+GET {{baseUrl}}/assets?category=MODELS_3D&status=ACTIVE&page=1&limit=10
+
+### 4. Search Assets
+GET {{baseUrl}}/assets?search=house
+
+### 5. Get Asset by ID
+GET {{baseUrl}}/assets/1
+
+### 6. Get Assets by Category
+GET {{baseUrl}}/assets/categories
+
+### 7. Get My Assets (needs Auth0 token)
+GET {{baseUrl}}/assets/my-assets
+Authorization: Bearer {{token}}
+
+### 8. Update Asset (needs Auth0 token)
+PATCH {{baseUrl}}/assets/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Updated 3D House Model",
+  "price": 39.99,
+  "status": "ACTIVE"
+}
+
+### 9. Delete Asset (needs Auth0 token)
+DELETE {{baseUrl}}/assets/1
+Authorization: Bearer {{token}}
+
+### 10. Increment Download Count (needs Auth0 token)
+POST {{baseUrl}}/assets/1/download
+Authorization: Bearer {{token}}
+
+### Categories disponibles:
+# MODELS_3D
+# CODE_SNIPPETS
+# NOTION_TEMPLATES
+# GRAPHICS
+# VIDEOS
+# OTHER
+
+### Status disponibles:
+# ACTIVE
+# INACTIVE
+# PENDING_REVIEW
